@@ -1,3 +1,4 @@
+from django.db.models import Count, Case, When, Avg
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -11,7 +12,10 @@ from portfolio.serializers import DesignsSerializer, UserDesignRelationSerialize
 
 
 class DesignViewSet(ModelViewSet):
-    queryset = Design.objects.all()
+    queryset = Design.objects.all().annotate(
+            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
+            rating=Avg('userdesignrelation__rate')
+        ).order_by('id')
     serializer_class = DesignsSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
