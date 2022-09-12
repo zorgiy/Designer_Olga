@@ -1,0 +1,11 @@
+django==4.1
+django-grappelli==3.0.3
+psycopg2==2.9.3
+djangorestframework==3.12.4
+pytz==2022.2.1
+coverage==6.4.4
+django-filter==22.1
+social-auth-app-django==5.0.0
+httpie==3.2.1
+django-oauth-toolkit==2.1.0
+django-rest-framework-social-oauth2==1.1.0
