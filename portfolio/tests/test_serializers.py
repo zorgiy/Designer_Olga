@@ -20,22 +20,23 @@ class DesignSerializerTestCase(TestCase):
                                          author_name='Author 2')
         UserDesignRelation.objects.create(user=user1, design=design_1, like=True, rate=5)
         UserDesignRelation.objects.create(user=user2, design=design_1, like=True, rate=5)
-        UserDesignRelation.objects.create(user=user3, design=design_1, like=True, rate=4)
+        user_design_3 = UserDesignRelation.objects.create(user=user3, design=design_1, like=True)
+        user_design_3.rate = 4
+        user_design_3.save()
 
         UserDesignRelation.objects.create(user=user1, design=design_2, like=True, rate=3)
         UserDesignRelation.objects.create(user=user2, design=design_2, like=True, rate=4)
         UserDesignRelation.objects.create(user=user3, design=design_2, like=False)
 
         designs = Design.objects.all().annotate(
-            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
-            rating=Avg('userdesignrelation__rate')
+            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1)))
         ).order_by('id')
         data = DesignsSerializer(designs, many=True).data
         expected_data = [
             {
                 'id': design_1.id,
                 'Design_title': 'Test Design 1',
-                'square':  '25',
+                'square': '25',
                 'author_name': 'Author 1',
                 'annotated_likes': 3,
                 'rating': '4.67',
@@ -79,4 +80,6 @@ class DesignSerializerTestCase(TestCase):
                 ]
             },
         ]
+        print('expected_data:', expected_data)
+        print('data:', data)
         self.assertEqual(expected_data, data)

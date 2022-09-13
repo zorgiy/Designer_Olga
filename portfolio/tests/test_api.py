@@ -37,8 +37,7 @@ class DesignsApiTestCase(APITestCase):
             response = self.client.get(url)
             self.assertEqual(2, len(queries))
         designs = Design.objects.all().annotate(
-            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
-            rating=Avg('userdesignrelation__rate')
+            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1)))
         ).order_by('id')
         serializer_data = DesignsSerializer(designs, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -49,8 +48,7 @@ class DesignsApiTestCase(APITestCase):
     def test_get_filter(self):
         url = reverse('design-list')
         designs = Design.objects.filter(id__in=[self.design_2.id, self.design_3.id]).annotate(
-            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
-            rating=Avg('userdesignrelation__rate')
+            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1)))
         ).order_by('id')
         response = self.client.get(url, data={'square': 55})
         serializer_data = DesignsSerializer(designs, many=True).data
@@ -60,8 +58,7 @@ class DesignsApiTestCase(APITestCase):
     def test_get_search(self):
         url = reverse('design-list')
         designs = Design.objects.filter(id__in=[self.design_1.id, self.design_3.id]).annotate(
-            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
-            rating=Avg('userdesignrelation__rate')
+            annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1)))
         ).order_by('id')
         response = self.client.get(url, data={'search': 'Author_1'})
         serializer_data = DesignsSerializer(designs, many=True).data

@@ -14,7 +14,6 @@ from portfolio.serializers import DesignsSerializer, UserDesignRelationSerialize
 class DesignViewSet(ModelViewSet):
     queryset = Design.objects.all().annotate(
             annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
-            rating=Avg('userdesignrelation__rate')
         ).select_related('owner').prefetch_related('vieweds').order_by('id')
     serializer_class = DesignsSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]

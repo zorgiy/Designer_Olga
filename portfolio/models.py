@@ -8,6 +8,7 @@ class Design(models.Model):
     author_name = models.CharField('Автор', max_length=255, default='Olga')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_designs')
     vieweds = models.ManyToManyField(User, through='UserDesignRelation', related_name='designs')
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True)
 
     def __str__(self):
         return f'Id {self.id}: {self.Design_title}'
@@ -38,3 +39,16 @@ class UserDesignRelation(models.Model):
     class Meta:
         verbose_name = 'Рейтинг пользователя'
         verbose_name_plural = 'Рейтинг пользователей'
+
+    def __init__(self, *args, **kwargs):
+        super(UserDesignRelation, self).__init__(*args, **kwargs)
+        self.old_rate = self.rate
+
+    def save(self, *args, **kwargs):
+        creating = not self.pk
+
+        super().save(*args, **kwargs)
+
+        if self.old_rate != self.rate or creating:
+            from portfolio.logic import set_rating
+            set_rating(self.design)
