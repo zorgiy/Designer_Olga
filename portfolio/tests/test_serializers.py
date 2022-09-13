@@ -8,17 +8,16 @@ from portfolio.serializers import DesignsSerializer
 
 class DesignSerializerTestCase(TestCase):
     def test_ok(self):
-        user1 = User.objects.create(username='user1')
-        user2 = User.objects.create(username='user2')
-        user3 = User.objects.create(username='user3')
+        user1 = User.objects.create(username='user1', first_name='Petr', last_name='Ivanov')
+        user2 = User.objects.create(username='user2', first_name='Inna', last_name='Volkova')
+        user3 = User.objects.create(username='user3', first_name='Pavel', last_name='Gagarin')
         design_1 = Design.objects.create(Design_title='Test Design 1',
                                          square=25,
                                          author_name='Author 1',
                                          owner=user1)
         design_2 = Design.objects.create(Design_title='Test Design 2',
                                          square=55,
-                                         author_name='Author 2',
-                                         owner=user2)
+                                         author_name='Author 2')
         UserDesignRelation.objects.create(user=user1, design=design_1, like=True, rate=5)
         UserDesignRelation.objects.create(user=user2, design=design_1, like=True, rate=5)
         UserDesignRelation.objects.create(user=user3, design=design_1, like=True, rate=4)
@@ -38,18 +37,46 @@ class DesignSerializerTestCase(TestCase):
                 'Design_title': 'Test Design 1',
                 'square':  '25',
                 'author_name': 'Author 1',
-                'likes_count': 3,
                 'annotated_likes': 3,
-                'rating': '4.67'
+                'rating': '4.67',
+                'owner_name': 'user1',
+                'vieweds': [
+                    {
+                        'first_name': 'Petr',
+                        'last_name': 'Ivanov'
+                    },
+                    {
+                        'first_name': 'Inna',
+                        'last_name': 'Volkova'
+                    },
+                    {
+                        'first_name': 'Pavel',
+                        'last_name': 'Gagarin'
+                    }
+                ]
             },
             {
                 'id': design_2.id,
                 'Design_title': 'Test Design 2',
                 'square': '55',
                 'author_name': 'Author 2',
-                'likes_count': 2,
                 'annotated_likes': 2,
-                'rating': '3.50'
+                'rating': '3.50',
+                'owner_name': '',
+                'vieweds': [
+                    {
+                        'first_name': 'Petr',
+                        'last_name': 'Ivanov'
+                    },
+                    {
+                        'first_name': 'Inna',
+                        'last_name': 'Volkova'
+                    },
+                    {
+                        'first_name': 'Pavel',
+                        'last_name': 'Gagarin'
+                    }
+                ]
             },
         ]
         self.assertEqual(expected_data, data)

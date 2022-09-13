@@ -1,7 +1,9 @@
 import json
 
 from django.contrib.auth.models import User
+from django.db import connection
 from django.db.models import Count, Case, When, Avg
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
@@ -31,7 +33,9 @@ class DesignsApiTestCase(APITestCase):
 
     def test_get(self):
         url = reverse('design-list')
-        response = self.client.get(url)
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(url)
+            self.assertEqual(2, len(queries))
         designs = Design.objects.all().annotate(
             annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
             rating=Avg('userdesignrelation__rate')
@@ -40,7 +44,6 @@ class DesignsApiTestCase(APITestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
         self.assertEqual(serializer_data[0]['rating'], '5.00')
-        self.assertEqual(serializer_data[0]['likes_count'], 1)
         self.assertEqual(serializer_data[0]['annotated_likes'], 1)
 
     def test_get_filter(self):

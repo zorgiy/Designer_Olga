@@ -15,7 +15,7 @@ class DesignViewSet(ModelViewSet):
     queryset = Design.objects.all().annotate(
             annotated_likes=Count(Case(When(userdesignrelation__like=True, then=1))),
             rating=Avg('userdesignrelation__rate')
-        ).order_by('id')
+        ).select_related('owner').prefetch_related('vieweds').order_by('id')
     serializer_class = DesignsSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
