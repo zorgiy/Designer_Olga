@@ -1,7 +1,20 @@
-# Бекенд на Django
+# Бэкенд на Django
+___
 
+<details><summary>Описание проекта:</summary>
 
+<br>Unit Tests</br>
+<br>Filters, Search, Ordering</br>
+<br>OAuth</br>
+<br>CRUD через REST Framework</br>
+<br>Permissions</br>
+<br>Like, Bookmarks, Rating</br>
+<br>Annotate и агрегация</br>
+<br>Оптимизация SQL запросов в ORM</br>
+<br>Кеширующие поля</br>
+</details>
 
+___
 Клонируем репозиторий на локальную машину:
 
 ```
@@ -10,7 +23,8 @@ https://github.com/zorgiy/Designer_Olga.git
 ```
 git clone git@github.com:zorgiy/Designer_Olga.git
 ```
-## Windows
+___
+### Windows
 <details><summary>Windows</summary>
 
 Устанавливаем виртуальное окружение:
@@ -44,7 +58,8 @@ python manage.py runserver localhost:80
 ```
 </details>
 
-## MacOS, Linux
+___
+### MacOS, Linux
 <details><summary>MacOS, Linux</summary>
 
 Устанавливаем виртуальное окружение:
@@ -81,4 +96,5 @@ python3 manage.py runserver localhost:80
 ```
 </details>
 
-### Автор: [@zorgiy](https://github.com/zorgiy)
+___
+#### Автор: [@zorgiy](https://github.com/zorgiy)
